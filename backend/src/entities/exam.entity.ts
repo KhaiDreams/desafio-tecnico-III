@@ -8,7 +8,7 @@ import {
   JoinColumn,
   Unique
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 import { Patient } from './patient.entity';
 import { DicomModality } from './dicom-modality.enum';
 
@@ -54,7 +54,7 @@ export class Exam {
   @Column('uuid')
   patientId!: string;
 
-  @ApiProperty({ description: 'Paciente associado ao exame' })
+  @ApiHideProperty() // Esconder do Swagger para evitar dependência circular
   @ManyToOne(() => Patient, patient => patient.exams, { 
     onDelete: 'CASCADE',
     eager: true 

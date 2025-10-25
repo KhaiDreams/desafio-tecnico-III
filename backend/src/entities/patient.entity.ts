@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany 
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 import { Exam } from './exam.entity';
 
 @Entity('patients')
@@ -47,7 +47,7 @@ export class Patient {
   })
   gender!: 'M' | 'F' | 'O';
 
-  @ApiProperty({ description: 'Exames associados ao paciente' })
+  @ApiHideProperty() // Esconder do Swagger para evitar dependência circular
   @OneToMany(() => Exam, (exam: Exam) => exam.patient)
   exams!: Exam[];
 
