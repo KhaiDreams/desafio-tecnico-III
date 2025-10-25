@@ -1,0 +1,105 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.patient-info {
+  margin-bottom: 24px;
+}
+
+.patient-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.patient-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  strong {
+    color: #666;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.modalidade-badge {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    color: #ccc;
+  }
+  
+  p {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 60px 20px;
+  
+  p {
+    margin-top: 16px;
+    color: #666;
+  }
+}
+
+:host ::ng-deep .success-snackbar {
+  background-color: #4caf50;
+  color: white;
+}
+
+:host ::ng-deep .error-snackbar {
+  background-color: #f44336;
+  color: white;
+}
+
+:host ::ng-deep .info-snackbar {
+  background-color: #2196f3;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .patient-details {
+    grid-template-columns: 1fr;
+  }
+}

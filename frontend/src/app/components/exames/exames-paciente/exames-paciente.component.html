@@ -1,0 +1,109 @@
+<div class="page-header">
+  <div>
+    <button mat-icon-button (click)="backToPacientes()" matTooltip="Voltar aos Pacientes">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1 class="page-title">
+      Exames de {{ paciente?.name || 'Carregando...' }}
+    </h1>
+  </div>
+  <button mat-raised-button color="primary" (click)="navigateToCreateExame()">
+    <mat-icon>add</mat-icon>
+    Novo Exame
+  </button>
+</div>
+
+<mat-card *ngIf="paciente" class="patient-info">
+  <mat-card-header>
+    <mat-card-title>Informações do Paciente</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="patient-details">
+      <div class="patient-detail">
+        <strong>Nome:</strong> {{ paciente.name }}
+      </div>
+      <div class="patient-detail">
+        <strong>CPF:</strong> {{ paciente.cpf }}
+      </div>
+      <div class="patient-detail">
+        <strong>Email:</strong> {{ paciente.email }}
+      </div>
+      <div class="patient-detail">
+        <strong>Data de Nascimento:</strong> {{ paciente.birthDate | date:'dd/MM/yyyy' }}
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="table-container" *ngIf="!loading; else loadingTemplate">
+  <table mat-table [dataSource]="dataSource" class="data-table">
+    
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let exame"> {{ exame.id }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nome </th>
+      <td mat-cell *matCellDef="let exame"> {{ exame.name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="examDate">
+      <th mat-header-cell *matHeaderCellDef> Data </th>
+      <td mat-cell *matCellDef="let exame"> {{ exame.examDate | date:'dd/MM/yyyy HH:mm' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="modality">
+      <th mat-header-cell *matHeaderCellDef> Modalidade </th>
+      <td mat-cell *matCellDef="let exame"> 
+        <span class="modalidade-badge">
+          {{ exame.modality }} - {{ getModalidadeLabel(exame.modality) }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Ações </th>
+      <td mat-cell *matCellDef="let exame">
+        <div class="action-buttons">
+          <button mat-icon-button color="accent" (click)="editExame(exame)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteExame(exame)" matTooltip="Excluir">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+  <div class="pagination-container">
+    <mat-paginator 
+      #paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+
+  <div *ngIf="dataSource.data.length === 0" class="no-data">
+    <mat-icon>assignment_outlined</mat-icon>
+    <p>Nenhum exame encontrado para este paciente</p>
+    <button mat-raised-button color="primary" (click)="navigateToCreateExame()">
+      Cadastrar Primeiro Exame
+    </button>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Carregando exames...</p>
+  </div>
+</ng-template>
