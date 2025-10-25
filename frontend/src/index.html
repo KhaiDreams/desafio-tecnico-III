@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Sistema de Gestão Médica</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <style>
+    /* Aplicar tema escuro base para evitar piscar */
+    html.dark-loading {
+      background-color: #121212 !important;
+    }
+    body.dark-loading {
+      background-color: #121212 !important;
+      color: #e0e0e0 !important;
+    }
+  </style>
+  
+  <script>
+    // Aplicar tema antes do carregamento para evitar flash
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      const shouldUseDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      
+      if (shouldUseDark) {
+        document.documentElement.classList.add('dark-loading');
+        document.documentElement.style.backgroundColor = '#121212';
+        
+        // Aplicar também ao body quando disponível
+        const applyToBody = () => {
+          if (document.body) {
+            document.body.classList.add('dark-loading', 'dark-theme');
+            document.body.style.backgroundColor = '#121212';
+            document.body.style.color = '#e0e0e0';
+          } else {
+            setTimeout(applyToBody, 1);
+          }
+        };
+        applyToBody();
+      }
+    })();
+  </script>
+</head>
+<body class="mat-typography">
+  <app-root></app-root>
+</body>
+</html>
