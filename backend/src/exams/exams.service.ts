@@ -5,12 +5,22 @@ import {
   BadRequestException 
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, QueryRunner, DataSource } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Exam } from '../entities/exam.entity';
 import { CreateExamDto } from '../dtos/create-exam.dto';
 import { PaginationQueryDto } from '../dtos/pagination-query.dto';
 import { PaginatedResponseDto } from '../dtos/paginated-response.dto';
 import { PatientsService } from '../patients/patients.service';
+
+interface CreateExamResult {
+  exam: Exam;
+  isNew: boolean;
+}
+
+interface CreateExamResult {
+  exam: Exam;
+  isNew: boolean;
+}
 
 @Injectable()
 export class ExamsService {
@@ -21,7 +31,7 @@ export class ExamsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(createExamDto: CreateExamDto): Promise<Exam> {
+  async create(createExamDto: CreateExamDto): Promise<CreateExamResult> {
     // Use transaction to ensure idempotency
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -31,7 +41,7 @@ export class ExamsService {
       // Check if patient exists
       const patientExists = await this.patientsService.exists(createExamDto.patientId);
       if (!patientExists) {
-        throw new BadRequestException('Paciente não encontrado');
+        throw new NotFoundException('Paciente não encontrado');
       }
 
       // Check for existing exam with same idempotency key
@@ -43,7 +53,7 @@ export class ExamsService {
       if (existingExam) {
         // Return existing exam (idempotent behavior)
         await queryRunner.commitTransaction();
-        return existingExam;
+        return { exam: existingExam, isNew: false };
       }
 
       // Create new exam
@@ -62,12 +72,12 @@ export class ExamsService {
       });
 
       await queryRunner.commitTransaction();
-      return examWithRelations!;
+      return { exam: examWithRelations!, isNew: true };
 
     } catch (error) {
       await queryRunner.rollbackTransaction();
       
-      if (error instanceof BadRequestException) {
+      if (error instanceof BadRequestException || error instanceof NotFoundException) {
         throw error;
       }
       
@@ -80,7 +90,7 @@ export class ExamsService {
         });
         
         if (existingExam) {
-          return existingExam;
+          return { exam: existingExam, isNew: false };
         }
       }
       

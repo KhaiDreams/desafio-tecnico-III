@@ -9,7 +9,9 @@ import {
   HttpStatus,
   ValidationPipe,
   ParseUUIDPipe,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import {
   ApiTags,
   ApiOperation,
@@ -29,7 +31,6 @@ export class ExamsController {
   constructor(private readonly examsService: ExamsService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Criar novo exame' })
   @ApiResponse({
     status: 201,
@@ -52,8 +53,15 @@ export class ExamsController {
   async create(
     @Body(new ValidationPipe({ transform: true, whitelist: true }))
     createExamDto: CreateExamDto,
-  ): Promise<Exam> {
-    return this.examsService.create(createExamDto);
+    @Res() res: Response,
+  ): Promise<void> {
+    const result = await this.examsService.create(createExamDto);
+    
+    if (result.isNew) {
+      res.status(201).json(result.exam);
+    } else {
+      res.status(200).json(result.exam);
+    }
   }
 
   @Get()
