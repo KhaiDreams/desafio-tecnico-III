@@ -1,0 +1,103 @@
+<div class="page-header">
+  <h1 class="page-title">Pacientes</h1>
+  <button mat-raised-button color="primary" (click)="navigateToCreate()">
+    <mat-icon>add</mat-icon>
+    Novo Paciente
+  </button>
+</div>
+
+<div class="main-content">
+  <div class="table-container" *ngIf="!loading; else loadingTemplate">
+    <table mat-table [dataSource]="dataSource" class="data-table" *ngIf="dataSource.data.length > 0; else noDataTemplate">
+    
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nome </th>
+      <td mat-cell *matCellDef="let paciente"> {{ paciente.name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cpf">
+      <th mat-header-cell *matHeaderCellDef> CPF </th>
+      <td mat-cell *matCellDef="let paciente"> {{ formatCpf(paciente.cpf) }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let paciente"> {{ paciente.email }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef> Telefone </th>
+      <td mat-cell *matCellDef="let paciente"> {{ formatPhone(paciente.phone) }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="birthDate">
+      <th mat-header-cell *matHeaderCellDef> Data de Nascimento </th>
+      <td mat-cell *matCellDef="let paciente"> {{ paciente.birthDate | date:'dd/MM/yyyy' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="gender">
+      <th mat-header-cell *matHeaderCellDef> Gênero </th>
+      <td mat-cell *matCellDef="let paciente"> {{ getGenderLabel(paciente.gender) }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Ações </th>
+      <td mat-cell *matCellDef="let paciente">
+        <div class="action-buttons">
+          <button mat-icon-button color="primary" (click)="viewExames(paciente)" matTooltip="Ver Exames">
+            <mat-icon>assignment</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="editPaciente(paciente)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deletePaciente(paciente)" matTooltip="Excluir">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <div class="pagination-container">
+      <mat-paginator 
+        #paginator
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPage"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </div>
+
+  <ng-template #noDataTemplate>
+    <div class="no-data">
+      <mat-icon>person_outline</mat-icon>
+      <p>Nenhum paciente cadastrado</p>
+      <button mat-raised-button color="primary" (click)="navigateToCreate()">
+        Cadastrar Primeiro Paciente
+      </button>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Carregando pacientes...</p>
+  </div>
+</ng-template>
+
+<div class="error-container" *ngIf="hasError && !loading">
+  <mat-icon color="warn">error_outline</mat-icon>
+  <p>Erro ao carregar dados. Verifique sua conexão com o servidor.</p>
+  <button mat-raised-button color="primary" (click)="retryLoad()">
+    <mat-icon>refresh</mat-icon>
+    Tentar Novamente
+  </button>
+</div>
