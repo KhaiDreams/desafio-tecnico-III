@@ -1,0 +1,47 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <mat-icon class="app-icon">local_hospital</mat-icon>
+  <span class="app-title">{{ title }}</span>
+  <span class="spacer"></span>
+  
+  <!-- Desktop Navigation -->
+  <div class="navigation-links desktop-nav">
+    <a mat-button routerLink="/pacientes" routerLinkActive="active">
+      <mat-icon>people</mat-icon>
+      Pacientes
+    </a>
+    <a mat-button routerLink="/exames" routerLinkActive="active">
+      <mat-icon>assignment</mat-icon>
+      Exames
+    </a>
+    
+    <!-- Theme Toggle Button -->
+    <button mat-icon-button (click)="toggleTheme()" [matTooltip]="isDarkMode ? 'Ativar tema claro' : 'Ativar tema escuro'">
+      <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+  </div>
+
+  <!-- Mobile Menu Button -->
+  <button mat-icon-button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!-- Mobile Navigation Menu -->
+<mat-nav-list class="mobile-nav" [class.show]="mobileMenuOpen">
+  <a mat-list-item routerLink="/pacientes" routerLinkActive="active" (click)="closeMobileMenu()">
+    <mat-icon matListIcon>people</mat-icon>
+    <span matLine>Pacientes</span>
+  </a>
+  <a mat-list-item routerLink="/exames" routerLinkActive="active" (click)="closeMobileMenu()">
+    <mat-icon matListIcon>assignment</mat-icon>
+    <span matLine>Exames</span>
+  </a>
+  <a mat-list-item (click)="toggleTheme(); closeMobileMenu()">
+    <mat-icon matListIcon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    <span matLine>{{ isDarkMode ? 'Tema Claro' : 'Tema Escuro' }}</span>
+  </a>
+</mat-nav-list>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
