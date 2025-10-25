@@ -1,0 +1,125 @@
+<div class="page-header">
+  <h1 class="page-title">Novo Paciente</h1>
+</div>
+
+<div class="form-container">
+  <form [formGroup]="pacienteForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Nome Completo</mat-label>
+        <input matInput formControlName="name" maxlength="255">
+        <mat-error *ngIf="name?.hasError('required')">
+          Nome é obrigatório
+        </mat-error>
+        <mat-error *ngIf="name?.hasError('minlength')">
+          Nome deve ter pelo menos 2 caracteres
+        </mat-error>
+        <mat-error *ngIf="name?.hasError('maxlength')">
+          Nome deve ter no máximo 255 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" placeholder="000.000.000-00" maxlength="14" (input)="onCpfInput($event)">
+        <mat-hint>Digite apenas números</mat-hint>
+        <mat-error *ngIf="cpf?.hasError('required')">
+          CPF é obrigatório
+        </mat-error>
+        <mat-error *ngIf="cpf?.hasError('cpfInvalid')">
+          CPF inválido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Data de Nascimento</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="birthDate" (dateChange)="onBirthDateChange()" readonly>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-hint *ngIf="getCurrentAge() !== null">Idade: {{ getCurrentAge() }} anos (clique no ícone para selecionar)</mat-hint>
+        <mat-hint *ngIf="getCurrentAge() === null">Clique no ícone para selecionar a data</mat-hint>
+        <mat-error *ngIf="birthDate?.hasError('required')">
+          Data de nascimento é obrigatória
+        </mat-error>
+        <mat-error *ngIf="birthDate?.hasError('futureDate')">
+          Data de nascimento não pode ser no futuro
+        </mat-error>
+        <mat-error *ngIf="birthDate?.hasError('invalidDate')">
+          Data de nascimento inválida (máximo 150 anos)
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" maxlength="255">
+        <mat-error *ngIf="email?.hasError('required')">
+          Email é obrigatório
+        </mat-error>
+        <mat-error *ngIf="email?.hasError('email')">
+          Email deve ter um formato válido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phone" placeholder="(00) 00000-0000" maxlength="15" (input)="onPhoneInput($event)">
+        <mat-hint>Telefone fixo ou celular</mat-hint>
+        <mat-error *ngIf="phone?.hasError('required')">
+          Telefone é obrigatório
+        </mat-error>
+        <mat-error *ngIf="phone?.hasError('minlength')">
+          Telefone deve ter pelo menos 10 dígitos
+        </mat-error>
+        <mat-error *ngIf="phone?.hasError('maxlength')">
+          Telefone deve ter no máximo 20 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Endereço</mat-label>
+        <textarea matInput formControlName="address" rows="3" maxlength="500"></textarea>
+        <mat-hint>Endereço completo (máx. 500 caracteres)</mat-hint>
+        <mat-error *ngIf="address?.hasError('required')">
+          Endereço é obrigatório
+        </mat-error>
+        <mat-error *ngIf="address?.hasError('minlength')">
+          Endereço deve ter pelo menos 5 caracteres
+        </mat-error>
+        <mat-error *ngIf="address?.hasError('maxlength')">
+          Endereço deve ter no máximo 500 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field gender-field" appearance="outline">
+        <mat-label>Gênero</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option value="M">Masculino</mat-option>
+          <mat-option value="F">Feminino</mat-option>
+          <mat-option value="O">Outro</mat-option>
+        </mat-select>
+        <mat-error *ngIf="gender?.hasError('required')">
+          Gênero é obrigatório
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading || pacienteForm.invalid">
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+        <span *ngIf="!loading">Salvar</span>
+        <span *ngIf="loading">Salvando...</span>
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,36 @@
+:host ::ng-deep .success-snackbar {
+  background-color: #4caf50;
+  color: white;
+}
+
+:host ::ng-deep .error-snackbar {
+  background-color: #f44336;
+  color: white;
+}
+
+// Campo de gênero - quebra a flexbox para não acompanhar o endereço
+.gender-field {
+  flex: none !important;
+  width: 200px !important;
+  max-width: 200px !important;
+  min-width: 200px !important;
+  align-self: flex-start !important;
+}
+
+.gender-field .mat-mdc-text-field-wrapper {
+  width: 200px !important;
+  max-width: 200px !important;
+  height: 56px !important;
+}
+
+.gender-field .mat-mdc-form-field-infix {
+  min-height: 40px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.gender-field .mat-select-trigger {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
