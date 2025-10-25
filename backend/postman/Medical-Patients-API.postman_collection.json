@@ -1,0 +1,359 @@
+{
+  "info": {
+    "name": "Medical Patients API",
+    "description": "Sistema de cadastro de pacientes e exames médicos com modalidades DICOM",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Pacientes",
+      "item": [
+        {
+          "name": "Criar Paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"João Silva Santos\",\n  \"birthDate\": \"1990-05-15\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"joao@email.com\",\n  \"phone\": \"11999887766\",\n  \"address\": \"Rua das Flores, 123, São Paulo - SP\",\n  \"gender\": \"M\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["pacientes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Pacientes (Paginado)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["pacientes"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Paciente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pacientes/{{patientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["pacientes", "{{patientId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Paciente - CPF Duplicado (Teste de Erro)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Maria Santos\",\n  \"birthDate\": \"1985-03-20\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"maria@email.com\",\n  \"phone\": \"11888776655\",\n  \"address\": \"Rua das Palmeiras, 456, Rio de Janeiro - RJ\",\n  \"gender\": \"F\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pacientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["pacientes"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Exames",
+      "item": [
+        {
+          "name": "Criar Exame",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-123-456-789\",\n  \"name\": \"Tomografia de Tórax\",\n  \"examDate\": \"2023-10-25T14:30:00Z\",\n  \"modality\": \"CT\",\n  \"observations\": \"Exame com contraste\",\n  \"patientId\": \"{{patientId}}\",\n  \"status\": \"AGENDADO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Exame - Idempotência (Mesmo Key)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-123-456-789\",\n  \"name\": \"Tomografia de Tórax\",\n  \"examDate\": \"2023-10-25T14:30:00Z\",\n  \"modality\": \"CT\",\n  \"observations\": \"Exame com contraste\",\n  \"patientId\": \"{{patientId}}\",\n  \"status\": \"AGENDADO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Exames (Paginado)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exames?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Exame por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exames/{{examId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames", "{{examId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Exames de um Paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exames/paciente/{{patientId}}?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames", "paciente", "{{patientId}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Exame - Paciente Inexistente (Teste de Erro)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-invalid-patient\",\n  \"name\": \"Ressonância Magnética\",\n  \"examDate\": \"2023-10-26T10:00:00Z\",\n  \"modality\": \"MR\",\n  \"patientId\": \"00000000-0000-0000-0000-000000000000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Exame - Modalidade Inválida (Teste de Erro)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-invalid-modality\",\n  \"name\": \"Exame Inválido\",\n  \"examDate\": \"2023-10-26T10:00:00Z\",\n  \"modality\": \"INVALID\",\n  \"patientId\": \"{{patientId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Testes de Modalidades DICOM",
+      "item": [
+        {
+          "name": "Exame - Computed Radiography (CR)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-cr-001\",\n  \"name\": \"Radiografia Computadorizada do Tórax\",\n  \"examDate\": \"2023-10-25T09:00:00Z\",\n  \"modality\": \"CR\",\n  \"patientId\": \"{{patientId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Exame - Computed Tomography (CT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-ct-001\",\n  \"name\": \"Tomografia Computadorizada de Abdômen\",\n  \"examDate\": \"2023-10-25T10:30:00Z\",\n  \"modality\": \"CT\",\n  \"patientId\": \"{{patientId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Exame - Magnetic Resonance (MR)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-mr-001\",\n  \"name\": \"Ressonância Magnética do Crânio\",\n  \"examDate\": \"2023-10-25T15:00:00Z\",\n  \"modality\": \"MR\",\n  \"patientId\": \"{{patientId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Exame - Ultrasound (US)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"exam-us-001\",\n  \"name\": \"Ultrassom Abdominal\",\n  \"examDate\": \"2023-10-25T16:30:00Z\",\n  \"modality\": \"US\",\n  \"patientId\": \"{{patientId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exames",
+              "host": ["{{baseUrl}}"],
+              "path": ["exames"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "patientId",
+      "value": "",
+      "type": "string",
+      "description": "ID do paciente criado (substitua pelo UUID retornado)"
+    },
+    {
+      "key": "examId",
+      "value": "",
+      "type": "string",
+      "description": "ID do exame criado (substitua pelo UUID retornado)"
+    }
+  ]
+}
