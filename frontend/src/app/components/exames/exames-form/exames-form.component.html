@@ -1,0 +1,117 @@
+<div class="page-header">
+  <h1 class="page-title">Novo Exame</h1>
+</div>
+
+<div class="form-container">
+  <form [formGroup]="exameForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Nome/Descrição do Exame</mat-label>
+        <input matInput formControlName="name" maxlength="255">
+        <mat-hint>Descreva o tipo de exame (ex: Tomografia de Tórax)</mat-hint>
+        <mat-error *ngIf="name?.hasError('required')">
+          Nome do exame é obrigatório
+        </mat-error>
+        <mat-error *ngIf="name?.hasError('minlength')">
+          Nome deve ter pelo menos 2 caracteres
+        </mat-error>
+        <mat-error *ngIf="name?.hasError('maxlength')">
+          Nome deve ter no máximo 255 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Data e Hora do Exame</mat-label>
+        <input matInput type="datetime-local" formControlName="examDate" [min]="minDate" [max]="maxDate">
+        <mat-hint>Selecione data e hora do exame (entre {{currentYear - 1}} e {{currentYear + 2}})</mat-hint>
+        <mat-error *ngIf="examDate?.hasError('required')">
+          Data do exame é obrigatória
+        </mat-error>
+        <mat-error *ngIf="examDate?.hasError('invalidDate')">
+          Data deve estar entre {{currentYear - 1}} e {{currentYear + 2}}
+        </mat-error>
+        <mat-error *ngIf="examDate?.hasError('pastDate')">
+          Data do exame não pode ser no passado
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Modalidade DICOM</mat-label>
+        <mat-select formControlName="modality">
+          <mat-option *ngFor="let modalidade of modalidades" [value]="modalidade">
+            {{ modalidade }} - {{ getModalidadeLabel(modalidade) }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="modality?.hasError('required')">
+          Modalidade é obrigatória
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Status do Exame</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+            {{ status.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Paciente</mat-label>
+        <input 
+          type="text"
+          matInput
+          [formControl]="patientSearchControl"
+          [matAutocomplete]="auto"
+          placeholder="Digite o nome ou CPF do paciente"
+          (input)="onPatientInput($event)">
+        <button *ngIf="selectedPatient" matSuffix mat-icon-button aria-label="Limpar seleção" (click)="clearPatientSelection()">
+          <mat-icon>clear</mat-icon>
+        </button>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPatientSelected($event)">
+          <mat-option *ngFor="let paciente of filteredPacientes | async" [value]="paciente">
+            {{ paciente.name }} - CPF: {{ formatCpf(paciente.cpf) }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint *ngIf="!selectedPatient">Busque por nome ou CPF do paciente</mat-hint>
+        <mat-hint *ngIf="selectedPatient" style="color: green;">
+          ✓ Paciente selecionado: {{ selectedPatient.name }}
+        </mat-hint>
+        <mat-error *ngIf="!selectedPatient && patientSearchControl.value">
+          Por favor, selecione um paciente da lista
+        </mat-error>
+        <mat-error *ngIf="patientId?.hasError('required')">
+          Paciente é obrigatório
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Observações</mat-label>
+        <textarea matInput formControlName="observations" rows="3" maxlength="1000"></textarea>
+        <mat-hint>Campo opcional</mat-hint>
+        <mat-error *ngIf="observations?.hasError('maxlength')">
+          Observações devem ter no máximo 1000 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading || exameForm.invalid || !selectedPatient">
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+        <span *ngIf="!loading">Salvar</span>
+        <span *ngIf="loading">Salvando...</span>
+      </button>
+    </div>
+
+  </form>
+</div>
