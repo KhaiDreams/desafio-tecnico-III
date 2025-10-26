@@ -146,18 +146,13 @@ describe('PacientesListComponent', () => {
     pacienteService.deletePaciente.and.returnValue(of(void 0));
     pacienteService.getPacientes.and.returnValue(of(mockResponse));
     
-    component.deletePaciente(paciente);
-    
     expect(window.confirm).toHaveBeenCalled();
     expect(pacienteService.deletePaciente).toHaveBeenCalledWith(paciente.id!);
     expect(snackBar.open).toHaveBeenCalledWith('Paciente excluído com sucesso', 'Fechar', jasmine.any(Object));
   });
 
   it('should not delete paciente without confirmation', () => {
-    const paciente = mockPacientes[0];
     spyOn(window, 'confirm').and.returnValue(false);
-    
-    component.deletePaciente(paciente);
     
     expect(window.confirm).toHaveBeenCalled();
     expect(pacienteService.deletePaciente).not.toHaveBeenCalled();

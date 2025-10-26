@@ -88,26 +88,6 @@ export class PacientesListComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/pacientes', paciente.id, 'exames']);
   }
 
-  editPaciente(paciente: Paciente): void {
-    // Implementar edição
-    this.showInfo('Funcionalidade de edição será implementada em breve');
-  }
-
-  deletePaciente(paciente: Paciente): void {
-    if (confirm(`Tem certeza que deseja excluir o paciente ${paciente.name}?`)) {
-      this.pacienteService.deletePaciente(paciente.id!).subscribe({
-        next: () => {
-          this.showSuccess('Paciente excluído com sucesso');
-          this.loadPacientes();
-        },
-        error: (error) => {
-          console.error('Erro ao excluir paciente:', error);
-          this.showError('Erro ao excluir paciente. Tente novamente.');
-        }
-      });
-    }
-  }
-
   // Formatação helpers
   formatCpf(cpf: string): string {
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');

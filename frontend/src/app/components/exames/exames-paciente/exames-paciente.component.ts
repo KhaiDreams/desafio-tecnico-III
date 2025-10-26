@@ -16,7 +16,7 @@ import { PacienteService } from '../../../services/paciente.service';
 export class ExamesPacienteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'name', 'examDate', 'modality', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'examDate', 'modality'];
   dataSource = new MatTableDataSource<Exame>();
   loading = false;
   totalItems = 0;
@@ -87,26 +87,6 @@ export class ExamesPacienteComponent implements OnInit {
 
   backToPacientes(): void {
     this.router.navigate(['/pacientes']);
-  }
-
-  editExame(exame: Exame): void {
-    // Implementar edição
-    this.showInfo('Funcionalidade de edição será implementada em breve');
-  }
-
-  deleteExame(exame: Exame): void {
-    if (confirm(`Tem certeza que deseja excluir o exame ${exame.name}?`)) {
-      this.exameService.deleteExame(exame.id!).subscribe({
-        next: () => {
-          this.showSuccess('Exame excluído com sucesso');
-          this.loadExames();
-        },
-        error: (error) => {
-          console.error('Erro ao excluir exame:', error);
-          this.showError('Erro ao excluir exame. Tente novamente.');
-        }
-      });
-    }
   }
 
   getModalidadeLabel(modalidade: string): string {
