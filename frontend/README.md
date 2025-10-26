@@ -219,7 +219,7 @@ frontend/
 - **Recursos**: 
   - Tabela responsiva com dados do paciente
   - Paginação com mat-paginator
-  - Botões de ação (ver exames, editar, excluir)
+  - Botões de ação (ver exames)
   - Loading state com spinner
   - Estado vazio com call-to-action
 
